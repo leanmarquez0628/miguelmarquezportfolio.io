@@ -178,8 +178,8 @@ $("#ttShow").textContent = short(MY_TIKTOK);
 /* >>> CHANGE ME: add more projects or screenshots. Put the pictures in images/projects/ <<< */
 const PROJECTS = [
   {
-    name: "MotoGP Team Legends",
-    url: "motogp-team-legends.html",
+    name: "MotoGP Legends",
+    url: "motogp-legends.html",
     desc: "A multi-section website about the MotoGP teams, their champions and the 22 rounds of a season. It has a full-screen hero, a page for each manufacturer with its key facts, and a scrolling race-track gallery.",
     tags: ["HTML", "CSS", "JavaScript", "Responsive layout"],
     shots: [
@@ -207,7 +207,7 @@ const PROJECTS = [
   },
   {
     name: "F1 Legends",
-    url: "index.html",
+    url: "f1-legends.html",
     desc: "A Formula 1 team-history website with a menu for McLaren, Mercedes, Ferrari, Red Bull, Williams and Alpine. Each team page shows facts, 2026 drivers and standings, and there is a race-calendar slider and a team search box.",
     tags: ["HTML", "CSS", "JavaScript", "Team search", "Slider"],
     shots: [
@@ -297,7 +297,7 @@ const PROJECTS = [
   },
   {
     name: "Drawing & Art Gallery",
-    url: "Art De Gallery/index.html",
+    url: "Art-De-Gallery.html",
     ratio: "1500 / 702",
     desc: "A separate website for my drawings, built with HTML, CSS and JavaScript. It has a hand-drawn grid look, polaroid-style artwork, a filterable work gallery (anime fan art and pencil portraits), a sketchbook strip, and a services section with prices.",
     tags: [
