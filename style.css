@@ -2077,3 +2077,64 @@ a.c-card:hover {
   padding: 9px 16px;
   font-size: 0.9rem;
 }
+
+/* ---------- small phones ---------- */
+.works-panel > *,
+.works-stage,
+.works-pane,
+.proj-grid > * {
+  min-width: 0;
+}
+@media (max-width: 860px) {
+  .works-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .works .proj-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .works-panel {
+    padding: 18px 14px 22px;
+    border-radius: 20px;
+    gap: 18px;
+  }
+  .works .tabs {
+    width: 100%;
+  }
+  .works .tab {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  .hero .badge {
+    right: 4px;
+  }
+}
+@media (max-width: 480px) {
+  .proj-ui {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+  .dots {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dots button {
+    width: 20px;
+  }
+  .dots button.active {
+    width: 34px;
+  }
+}
+@media (max-width: 560px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .stats li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .footer p {
+    padding: 0 16px;
+    text-align: center;
+  }
+}
