@@ -48,22 +48,35 @@ $$("#links a").forEach((a) =>
 
 const sections = $$("main section[id]");
 const navLinks = $$("#links a");
-const spy = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((en) => {
-      if (en.isIntersecting) {
-        navLinks.forEach((a) =>
-          a.classList.toggle(
-            "active",
-            a.getAttribute("href") === "#" + en.target.id,
-          ),
-        );
-      }
-    });
+let spyTick = false;
+function updateSpy() {
+  spyTick = false;
+  const line = innerHeight * 0.4; // the "reading line" 40% down the screen
+  let cur = sections[0] && sections[0].id;
+  sections.forEach((sec) => {
+    if (sec.getBoundingClientRect().top <= line) cur = sec.id;
+  });
+  if (
+    innerHeight + scrollY >= document.documentElement.scrollHeight - 4 &&
+    sections.length
+  )
+    cur = sections[sections.length - 1].id;
+  navLinks.forEach((a) =>
+    a.classList.toggle("active", a.getAttribute("href") === "#" + cur),
+  );
+}
+addEventListener(
+  "scroll",
+  () => {
+    if (!spyTick) {
+      spyTick = true;
+      requestAnimationFrame(updateSpy);
+    }
   },
-  { rootMargin: "-45% 0px -50% 0px" },
+  { passive: true },
 );
-sections.forEach((s) => spy.observe(s));
+addEventListener("resize", updateSpy);
+updateSpy();
 
 addEventListener(
   "scroll",
@@ -192,6 +205,7 @@ const PROJECTS = [
   {
     name: "MotoGP Team Legends",
     url: "motogp-team-legends.html",
+    kind: "Made by me · Magazine/Information Website",
     desc: "A multi-section website about the MotoGP teams, their champions and the 22 rounds of a season. It has a full-screen hero, a page for each manufacturer with its key facts, and a scrolling race-track gallery.",
     tags: ["HTML", "CSS", "JavaScript", "Responsive layout"],
     shots: [
@@ -220,6 +234,7 @@ const PROJECTS = [
   {
     name: "F1 Legends",
     url: "index.html",
+    kind: "Made by me · Magazine/Information Website",
     desc: "A Formula 1 team-history website with a menu for McLaren, Mercedes, Ferrari, Red Bull, Williams and Alpine. Each team page shows facts, 2026 drivers and standings, and there is a race-calendar slider and a team search box.",
     tags: ["HTML", "CSS", "JavaScript", "Team search", "Slider"],
     shots: [
@@ -273,26 +288,21 @@ const PROJECTS = [
   {
     name: "My Personal Website",
     url: "lean-marquez-website.html",
-    desc: "This portfolio website, built from scratch with HTML, CSS and JavaScript. It has a floating menu, typing headings, a dark and light mode switch, project slideshows, a tools section and contact cards.",
+    kind: "Made by me · Portfolio Website",
+    ratio: "1880 / 826",
+    desc: "Built from scratch using vanilla HTML, CSS, and JavaScript, this responsive portfolio website features interactive UI elements, including a floating navigation menu, dynamic typing headers, a custom light/dark theme toggle, interactive project slideshows, a technical toolstack display, and integrated contact cards.",
     tags: ["HTML", "CSS", "JavaScript", "Dark mode", "Responsive layout"],
     shots: [
       {
         img: "images/projects/site-home.jpg",
         alt: "Personal website home page",
         caption:
-          "Home page: my name, typing roles and photo, shown in dark mode.",
+          "Home: my name, typing roles and photo in the new sunset colors, shown in dark mode.",
       },
       {
-        img: "images/projects/site-projects.jpg",
-        alt: "Personal website projects",
-        caption:
-          "Projects: tabs and a slideshow for each web development project.",
-      },
-      {
-        img: "images/projects/site-construction.jpg",
-        alt: "Personal website construction",
-        caption:
-          "Construction: my SketchUp capstone renders in their own slideshow.",
+        img: "images/projects/site-about.jpg",
+        alt: "Personal website about me",
+        caption: "About Me: my story, graduation photo and quick stats.",
       },
       {
         img: "images/projects/site-services.jpg",
@@ -300,18 +310,19 @@ const PROJECTS = [
         caption: "Services: cards for the work I can do.",
       },
       {
-        img: "images/projects/site-tools.jpg",
-        alt: "Personal website tools",
+        img: "images/projects/site-works.jpg",
+        alt: "Personal website my works",
         caption:
-          "Tools I Use: Microsoft Office, Google Workspace, design and social apps.",
+          "My Works: one panel for web development, construction and data analytics projects.",
       },
     ],
   },
   {
     name: "The Sketchbook Chronicles",
     url: "leanmarquez0628.github.io/thesketchbookchronicles",
-    ratio: "1500 / 789",
-    desc: "My art website, The Sketchbook Chronicles: a personal visual diary of my drawings. It has a hand-drawn grid look, a layout switch on the home page, an About Me page with a drawing carousel and quick stats, a filterable work gallery (anime fan art and pencil portraits), a sketchbook strip, and a Commission Me button.",
+    kind: "Made by me · Art Website",
+    ratio: "1893 / 874",
+    desc: "The Sketchbook Chronicles is a custom personal art archive featuring a hand-drawn grid aesthetic rendered in a warm sunset color palette. Key features include dynamic layout controls, an integrated About section with an interactive photo carousel, a categorized portfolio gallery, a continuous sketchbook showcase, curated social media feeds, and a direct commission booking link.",
     tags: [
       "HTML",
       "CSS",
@@ -332,19 +343,25 @@ const PROJECTS = [
         img: "images/projects/sketch-about.jpg",
         alt: "The Sketchbook Chronicles about page",
         caption:
-          "About me, in drawing: a carousel of my work, my mediums and quick stats.",
+          "About me, in drawing: a photo carousel, my mediums and quick stats.",
       },
       {
         img: "images/projects/sketch-gallery.jpg",
         alt: "The Sketchbook Chronicles work gallery",
         caption:
-          "My work gallery: filter by anime fan art or pencil portraits.",
+          "My work gallery: filter by anime fan art, pencil portraits, ink, painting or digital art.",
       },
       {
         img: "images/projects/sketch-sketchbook.jpg",
         alt: "The Sketchbook Chronicles sketchbook",
         caption:
-          "Sketchbook: a scrolling strip of my pencil portraits and colored fan art.",
+          "Sketchbook: a scrolling strip of my colored fan art and pencil portraits.",
+      },
+      {
+        img: "images/projects/sketch-blog.jpg",
+        alt: "The Sketchbook Chronicles blog",
+        caption:
+          "Blog: my Instagram and TikTok posts, shown right on the site.",
       },
     ],
   },
@@ -355,7 +372,7 @@ const DATA_WORKS = [
     url: "retail-sales-dashboard-2024",
     kind: "Made by me · Data analytics",
     ratio: "1500 / 711",
-    desc: "A Retail Sales Performance Dashboard (2024) built in Excel. I cleaned the raw sales data, summarized it with pivot tables, and built an interactive dashboard with slicers (month, sales representative, category, region), KPI cards for orders, quantity, discount, cost, profit and revenue, and charts for sales by month, representative, region and product.",
+    desc: "Designed and built an interactive 2024 Retail Sales Performance Dashboard in Microsoft Excel. Managed end-to-end data processing—cleansing raw transactional data, structuring summary metrics with Pivot Tables, and engineering dynamic KPI cards (Orders, Units Sold, Discount Rate, COGS, Profit, Revenue). Integrated multi-parameter slicers and interactive chart layouts to evaluate performance trends across time, sales representatives, product categories, and geographic regions.",
     tags: ["Excel", "Pivot Tables", "Dashboard", "Data Analytics"],
     shots: [
       {
@@ -426,9 +443,9 @@ const CONSTRUCTION = [
   {
     name: "Cost Estimation (Excel)",
     url: "cost-estimation-one-storey-residential",
-    kind: "Made by me · Cost estimation",
+    kind: "Made by me · Cost Analysis",
     ratio: "3 / 2",
-    desc: "Cost estimation of a one-storey residential building in Barangay VI, Pineapple Street, Purok 3, Daet, Camarines Norte. I prepared the materials, equipment and labor take-offs in Excel for the earthworks, structural, plumbing and architectural works, then summed them up with profit/OCM and VAT into an item cost.",
+    desc: "Developed a detailed engineering cost estimate for a single-story residential building located at Pineapple Street, Purok 3, Brgy. VI, Daet, Camarines Norte. Performed comprehensive material, equipment, and labor quantity takeoffs in Microsoft Excel across earthworks, structural, plumbing, and architectural trades. Synthesized unit cost analyses, overhead, contingencies, and miscellaneous (OCM) expenses, contractor's profit, and value-added tax (VAT) into a finalized itemized project cost estimate.",
     tags: [
       "Excel",
       "Cost estimation",
@@ -458,6 +475,83 @@ const CONSTRUCTION = [
         alt: "Labor cost",
         caption:
           "Labor cost: foreman, skilled labor and laborers for each work type.",
+      },
+    ],
+  },
+  {
+    name: "Interior Renders (D5 Render)",
+    url: "interior-design-d5-render",
+    kind: "Made by me · 3D interior design",
+    ratio: "2296 / 1616",
+    desc: "Realistic 3D interior renders made with D5 Render: a living room with a black accent wall and white geometric lines, a sofa, an armchair and a glass coffee table, and a bedroom with a padded black-and-cream headboard wall, wood slat paneling and a glass wardrobe. The sunlight, shadows and materials were set up in D5 Render.",
+    tags: ["D5 Render", "3D rendering", "Interior design", "Visualization"],
+    shots: [
+      {
+        img: "images/projects/d5-living.jpg",
+        alt: "Living room render",
+        caption:
+          "Living room: black accent wall with white lines, sofa, armchair and glass coffee table in sunlight.",
+      },
+      {
+        img: "images/projects/d5-bedroom.jpg",
+        alt: "Bedroom render",
+        caption:
+          "Bedroom: padded headboard wall, wood slat paneling, bedside tables and a glass wardrobe.",
+      },
+    ],
+  },
+  {
+    name: "Residential Building Plans",
+    url: "residential-building-plans.pdf",
+    kind: "Made by me · Plan set",
+    ratio: "1260 / 885",
+    desc: "Complete construction plan sheets for a single-story residential building located at Purok 3, Brgy. VI, Daet, Camarines Norte. The sheet set encompasses comprehensive architectural drawings (site plan, floor plans, exterior elevations, building sections, and door/window schedules), structural framing details, and MEP plumbing layouts (water supply, sewerage, and sanitary systems)—all standardized under a custom title block created by Lean Miguel A. Marquez.",
+    tags: [
+      "Architectural plans",
+      "Structural plans",
+      "Plumbing plans",
+      "Plan sheets",
+    ],
+    shots: [
+      {
+        img: "images/projects/plan-a1.jpg",
+        alt: "Perspective, lot plan and site development plan",
+        caption:
+          "Sheet A-1: perspective, lot plan, site development plan and lot technical description.",
+      },
+      {
+        img: "images/projects/plan-a2.jpg",
+        alt: "Ground floor plan and vicinity map",
+        caption: "Sheet A-2: ground floor plan with the vicinity map.",
+      },
+      {
+        img: "images/projects/plan-a3.jpg",
+        alt: "Elevations and sections",
+        caption:
+          "Sheet A-3: front, right, rear and left side elevations, with sections A and B.",
+      },
+      {
+        img: "images/projects/plan-a4.jpg",
+        alt: "Schedule of doors and windows",
+        caption: "Sheet A-4: schedule of doors and windows.",
+      },
+      {
+        img: "images/projects/plan-s1.jpg",
+        alt: "Structural plans and details",
+        caption:
+          "Sheet S-1: foundation, roof framing, roof beam and roof plan layouts with column, footing and timber truss details.",
+      },
+      {
+        img: "images/projects/plan-p1.jpg",
+        alt: "Plumbing layouts and septic tank detail",
+        caption:
+          "Sheet P-1: ground floor water-line and sewer layouts, septic tank detail and legends.",
+      },
+      {
+        img: "images/projects/plan-p2.jpg",
+        alt: "Sanitary layout and plumbing notes",
+        caption:
+          "Sheet P-2: ground floor sanitary layout, general notes, catch basin detail and septic tank dimensions.",
       },
     ],
   },
@@ -615,6 +709,7 @@ const TOOLS = [
         color: "#E51050",
         svg: "M3.8672 1.0527v.0157L0 3.3848v17.914l3.8965-2.332h18.3398V2.3301c0-.702-.5773-1.2774-1.2793-1.2774H3.8672zm7.5058 4.0098h3.3008l2.9844 9.9512h-2.5879l-.5683-2.1895h-2.9844l-.5703 2.1621h-2.416l2.8417-9.9238zm11.8633.0273v14.877H4.172l-2.0684 1.2383v.4648c0 .702.5793 1.2774 1.2813 1.2774H24V5.0898h-.7637zM12.9668 6.6816l-.9941 4.3243h2.0468l-1.0527-4.3243z",
       },
+      { name: "D5 Render", color: "#2D7FF9", txt: "D5" },
     ],
   },
   {
@@ -638,6 +733,22 @@ const TOOLS = [
     ],
   },
   {
+    group: "AI Tools",
+    items: [
+      {
+        name: "Gemini",
+        color: "#4285F4",
+        svg: "M12 0C12.6 6.6 17.4 11.4 24 12 17.4 12.6 12.6 17.4 12 24 11.4 17.4 6.6 12.6 0 12 6.6 11.4 11.4 6.6 12 0Z",
+      },
+      {
+        name: "Claude",
+        color: "#D97757",
+        svg: "M12.00 0.50 L12.93 8.52 L17.75 2.04 L14.55 9.45 L21.96 6.25 L15.48 11.07 L23.50 12.00 L15.48 12.93 L21.96 17.75 L14.55 14.55 L17.75 21.96 L12.93 15.48 L12.00 23.50 L11.07 15.48 L6.25 21.96 L9.45 14.55 L2.04 17.75 L8.52 12.93 L0.50 12.00 L8.52 11.07 L2.04 6.25 L9.45 9.45 L6.25 2.04 L11.07 8.52Z",
+      },
+      { name: "ChatGPT", color: "#10A37F", txt: "GPT" },
+    ],
+  },
+  {
     group: "Social Media",
     items: [
       {
@@ -654,6 +765,11 @@ const TOOLS = [
         name: "TikTok",
         color: "ink",
         svg: "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z",
+      },
+      {
+        name: "Threads",
+        color: "ink",
+        svg: "M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z",
       },
     ],
   },
@@ -704,3 +820,112 @@ $$("#toolGroups .reveal").forEach((el) => reveal.observe(el));
     }),
   );
 }
+
+/* ---------- 12. COMPOSE EMAIL FORM + SOCIAL ICONS ---------- */
+(function () {
+  const set = (id, url) => {
+    const a = document.getElementById(id);
+    if (a) a.href = url || "#";
+  };
+  set("socIg", MY_INSTAGRAM);
+  set("socFb", MY_FACEBOOK);
+  set("socTt", MY_TIKTOK);
+  const f = document.getElementById("composeForm");
+  if (!f) return;
+  const msg = document.getElementById("composeMsg");
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const v = (n) => f.elements[n].value.trim();
+    if (!v("first") || !v("last") || !v("email")) {
+      msg.className = "form-msg err";
+      msg.textContent = "Please fill in your first name, last name and email.";
+      return;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("email"))) {
+      msg.className = "form-msg err";
+      msg.textContent = "Please enter a valid email address.";
+      return;
+    }
+    const subject =
+      v("subject") || "Message from " + v("first") + " " + v("last");
+    const body =
+      v("message") +
+      "\n\n— " +
+      v("first") +
+      " " +
+      v("last") +
+      "\n" +
+      v("email");
+    msg.className = "form-msg ok";
+    msg.textContent = "Opening your email app…";
+    window.location.href =
+      "mailto:" +
+      MY_EMAIL +
+      "?subject=" +
+      encodeURIComponent(subject) +
+      "&body=" +
+      encodeURIComponent(body);
+  });
+})();
+
+/* ---------- 13. TRAINING & CERTIFICATIONS SLIDER ---------- */
+(function () {
+  const box = document.getElementById("certSlider");
+  if (!box) return;
+  const slides = [...box.querySelectorAll(".cert")],
+    track = document.getElementById("certTrack");
+  const dots = document.getElementById("certDots"),
+    count = document.getElementById("certCount");
+  let i = 0,
+    timer = null,
+    x0 = null;
+  slides.forEach((_, n) => {
+    const d = document.createElement("button");
+    d.type = "button";
+    d.setAttribute("aria-label", "Slide " + (n + 1));
+    d.addEventListener("click", () => {
+      go(n);
+      restart();
+    });
+    dots.appendChild(d);
+  });
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    track.style.transform = "translateX(" + -i * 100 + "%)";
+    slides.forEach((s, k) => s.classList.toggle("active", k === i));
+    [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    count.textContent = i + 1 + " / " + slides.length;
+  }
+  function restart() {
+    clearInterval(timer);
+    timer = setInterval(() => go(i + 1), 5000);
+  }
+  document.getElementById("certPrev").addEventListener("click", () => {
+    go(i - 1);
+    restart();
+  });
+  document.getElementById("certNext").addEventListener("click", () => {
+    go(i + 1);
+    restart();
+  });
+  box.addEventListener("mouseenter", () => clearInterval(timer));
+  box.addEventListener("mouseleave", restart);
+  box.addEventListener(
+    "touchstart",
+    (e) => {
+      x0 = e.touches[0].clientX;
+    },
+    { passive: true },
+  );
+  box.addEventListener("touchend", (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 40) {
+      go(i + (dx < 0 ? 1 : -1));
+      restart();
+    }
+  });
+  go(0);
+  restart();
+})();
