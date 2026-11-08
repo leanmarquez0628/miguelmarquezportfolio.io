@@ -2461,3 +2461,206 @@ a.c-card:hover {
     height: 42px;
   }
 }
+
+/* journey: education / experience split + resume download */
+.journey {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 36px;
+  align-items: start;
+}
+.journey-title {
+  font-family: var(--head);
+  font-weight: 400;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 22px;
+  border-bottom: 3px solid var(--red);
+}
+.journey-ico {
+  font-size: 1.3rem;
+}
+.vtimeline {
+  list-style: none;
+  position: relative;
+  padding-left: 40px;
+}
+.vtimeline::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 7px;
+  width: 3px;
+  background: repeating-linear-gradient(180deg, var(--red) 0 12px, transparent 12px 22px);
+}
+.vtimeline > li {
+  position: relative;
+  padding-bottom: 28px;
+}
+.vtimeline > li:last-child {
+  padding-bottom: 0;
+}
+.vtimeline > li::before {
+  content: "";
+  position: absolute;
+  left: -40px;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--yellow);
+  border: 4px solid var(--red);
+}
+.vtimeline time {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.vtimeline h5 {
+  font-family: var(--head);
+  font-weight: 400;
+  font-size: 1.35rem;
+  line-height: 1.15;
+  margin: 4px 0 6px;
+}
+.vtimeline p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.journey-points {
+  margin: 10px 0 0 18px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.journey-points li {
+  margin-bottom: 4px;
+}
+.resume-card {
+  margin-top: 34px;
+  padding: 22px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--bg-alt);
+  color: #121826;
+}
+[data-theme="dark"] .resume-card {
+  background: #1b2236;
+  color: var(--ink);
+}
+.resume-card h5 {
+  font-family: var(--head);
+  font-weight: 400;
+  font-size: 1.35rem;
+}
+.resume-card p {
+  margin: 4px 0 14px;
+  font-size: 0.92rem;
+}
+.resume-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.resume-btns .btn {
+  justify-content: center;
+  padding: 12px 18px;
+  text-align: center;
+}
+.resume-card .btn.ghost {
+  border-color: currentColor;
+}
+.resume-card .btn.ghost:hover {
+  background: #121826;
+  color: #fff;
+}
+[data-theme="dark"] .resume-card .btn.ghost:hover {
+  background: var(--ink);
+  color: #121826;
+}
+@media (max-width: 860px) {
+  .journey {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+/* hero resume dropdown + contact resume card */
+.cta {
+  flex-wrap: wrap;
+}
+.dl-menu {
+  position: relative;
+}
+.dl-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+.dl-menu summary::-webkit-details-marker {
+  display: none;
+}
+.dl-list {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 5px 5px 0 var(--red);
+}
+.dl-list a {
+  padding: 13px 18px;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.dl-list a + a {
+  border-top: 1px solid rgba(128, 128, 128, 0.35);
+}
+.dl-list a:hover {
+  background: var(--red);
+  color: #121826;
+}
+.contact .resume-card {
+  margin: 56px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 8px 28px;
+  align-items: center;
+}
+.contact .resume-card h5,
+.contact .resume-card p {
+  grid-column: 1;
+  margin: 0;
+}
+.contact .resume-card h5 {
+  align-self: end;
+}
+.contact .resume-card p {
+  align-self: start;
+}
+.contact .resume-card .resume-btns {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+@media (max-width: 860px) {
+  .contact .resume-card {
+    grid-template-columns: 1fr;
+  }
+  .contact .resume-card .resume-btns {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}

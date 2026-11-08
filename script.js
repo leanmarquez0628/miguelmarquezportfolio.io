@@ -929,3 +929,18 @@ $$("#toolGroups .reveal").forEach((el) => reveal.observe(el));
   go(0);
   restart();
 })();
+
+/* ---------- 14. hero resume dropdown: close on outside click / Esc ---------- */
+(function () {
+  const dd = document.querySelector(".dl-menu");
+  if (!dd) return;
+  document.addEventListener("click", (e) => {
+    if (!dd.contains(e.target)) dd.removeAttribute("open");
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") dd.removeAttribute("open");
+  });
+  dd.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => setTimeout(() => dd.removeAttribute("open"), 100))
+  );
+})();
