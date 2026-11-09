@@ -505,7 +505,7 @@ const CONSTRUCTION = [
     url: "residential-building-plans.pdf",
     kind: "Made by me · Plan set",
     ratio: "1260 / 885",
-    desc: "Complete construction plan sheets for a single-story residential building located at Purok 3, Brgy. VI, Daet, Camarines Norte. The sheet set encompasses comprehensive architectural drawings (site plan, floor plans, exterior elevations, building sections, and door/window schedules), structural framing details, and MEP plumbing layouts (water supply, sewerage, and sanitary systems)—all standardized under a custom title block created by Lean Miguel A. Marquez.",
+    desc: "Complete construction plan sheets for a single-story residential building located at Purok 3, Brgy. VI, Daet, Camarines Norte. The sheet set encompasses comprehensive architectural drawings (site plan, floor plans, exterior elevations, building sections, and door/window schedules), structural framing details, and MEP plumbing layouts (water supply, sewerage, and sanitary systems)—all standardized under a custom title block created by author made the website.",
     tags: [
       "Architectural plans",
       "Structural plans",
@@ -613,6 +613,9 @@ function slideshow(P, LIST) {
     clearInterval(timer);
     if (LIST[p].shots.length > 1) timer = setInterval(() => go(i + 1), 5000);
   }
+  function stop() {
+    clearInterval(timer);
+  }
   tabs.addEventListener("click", (e) => {
     const b = e.target.closest(".tab");
     if (b) load(+b.dataset.p);
@@ -632,10 +635,13 @@ function slideshow(P, LIST) {
   box.parentElement.addEventListener("mouseenter", () => clearInterval(timer));
   box.parentElement.addEventListener("mouseleave", play);
   load(0);
+  return { load, stop };
 }
-slideshow("proj", PROJECTS);
-slideshow("con", CONSTRUCTION);
-slideshow("da", DATA_WORKS);
+const SS = {
+  proj: slideshow("proj", PROJECTS),
+  con: slideshow("con", CONSTRUCTION),
+  da: slideshow("da", DATA_WORKS),
+};
 
 /* ---------------------------------------------------------
    9. TOOLS I USE
@@ -805,6 +811,69 @@ $$("#toolGroups .reveal").forEach((el) => reveal.observe(el));
     const n = counts[el.dataset.list];
     el.textContent = n + (n === 1 ? " project" : " projects");
   });
+  /* project cards: click a card to open the screenshot viewer */
+  const SETS = {
+    projects: ["proj", PROJECTS],
+    construction: ["con", CONSTRUCTION],
+    dataworks: ["da", DATA_WORKS],
+  };
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  let openViewer = null;
+  function closeViewer() {
+    if (!openViewer) return;
+    openViewer.view.hidden = true;
+    SS[openViewer.P].stop();
+    document.body.style.overflow = "";
+    if (openViewer.card) openViewer.card.focus();
+    openViewer = null;
+  }
+  Object.entries(SETS).forEach(([key, [P, LIST]]) => {
+    const grid = $("#grid-" + key),
+      view = $("#viewer-" + key);
+    $$(".reveal", view).forEach((el) => el.classList.remove("reveal"));
+    document.body.appendChild(view); /* pop-up must sit outside the transformed panel */
+    grid.innerHTML = LIST.map(
+      (x, n) => `
+      <article class="work-card" tabindex="0" role="button" data-n="${n}" aria-label="Open ${esc(x.name)}">
+        <div class="wc-img">
+          <img src="${x.shots[0].img}" alt="${esc(x.shots[0].alt)}" loading="lazy" />
+          <span class="wc-num">${pad(n + 1)}</span>
+        </div>
+        <div class="wc-body">
+          <p class="wc-tags">${x.tags.slice(0, 4).map(esc).join(" · ")}</p>
+          <h4>${esc(x.name)}</h4>
+          <p class="wc-desc">${esc(x.desc)}</p>
+          <span class="wc-arrow" aria-hidden="true">↗</span>
+        </div>
+      </article>`,
+    ).join("");
+    const open = (card) => {
+      SS[P].load(+card.dataset.n);
+      view.hidden = false;
+      document.body.style.overflow = "hidden";
+      openViewer = { P, view, card };
+      $(".pv-close", view).focus();
+    };
+    grid.addEventListener("click", (e) => {
+      const c = e.target.closest(".work-card");
+      if (c) open(c);
+    });
+    grid.addEventListener("keydown", (e) => {
+      const c = e.target.closest(".work-card");
+      if (c && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        open(c);
+      }
+    });
+    $(".pv-close", view).addEventListener("click", closeViewer);
+    view.addEventListener("click", (e) => {
+      if (e.target === view) closeViewer();
+    });
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeViewer();
+  });
+
   const items = $$(".works-item"),
     panes = $$(".works-pane");
   items.forEach((btn) =>
